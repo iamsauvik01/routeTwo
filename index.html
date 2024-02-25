@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Route and Flora/Fauna between Mumbai and Lonavala</title>
+    <title>Route and Flora/Fauna between Dharapur and Assam Don Bosco University</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <style>
         #map {
@@ -20,25 +20,25 @@
     </style>
 </head>
 <body>
-    <h1>Route and Flora/Fauna between Mumbai and Lonavala</h1>
+    <h1>Route and Flora/Fauna between Dharapur and Assam Don Bosco University</h1>
     <div id="map"></div>
     <div id="observations"></div>
 
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            var map = L.map('map').setView([18.975, 73.409], 10); // Center map between Mumbai and Lonavala
+            var map = L.map('map').setView([26.1408, 91.7704], 12); // Center map between Dharapur and Assam Don Bosco University
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
 
-            var mumbai = L.marker([19.0760, 72.8777]).addTo(map); // Add marker for Mumbai
-            var lonavala = L.marker([18.7507, 73.4057]).addTo(map); // Add marker for Lonavala
+            var dharapur = L.marker([26.1689, 91.7977]).addTo(map); // Add marker for Dharapur
+            var assamDonBoscoUniversity = L.marker([26.1521, 91.6689]).addTo(map); // Add marker for Assam Don Bosco University
 
             var latlngs = [
-                [19.0760, 72.8777], // Mumbai
-                [18.7507, 73.4057]  // Lonavala
+                [26.1689, 91.7977], // Dharapur
+                [26.1521, 91.6689]  // Assam Don Bosco University
             ];
 
             var polyline = L.polyline(latlngs, {color: 'blue'}).addTo(map); // Add polyline for the route
@@ -83,11 +83,11 @@
                     });
             }
 
-            // Coordinates for bounding box around Mumbai and Lonavala
-            var latitude1 = 19.0760; // North latitude (Mumbai)
-            var longitude1 = 73.4057; // East longitude (Lonavala)
-            var latitude2 = 18.7507; // South latitude (Lonavala)
-            var longitude2 = 72.8777; // West longitude (Mumbai)
+            // Coordinates for bounding box around Dharapur and Assam Don Bosco University
+            var latitude1 = 26.1689; // North latitude (Dharapur)
+            var longitude1 = 91.7977; // East longitude (Dharapur)
+            var latitude2 = 26.1521; // South latitude (Assam Don Bosco University)
+            var longitude2 = 91.6689; // West longitude (Assam Don Bosco University)
 
             fetchObservations(latitude1, longitude1, latitude2, longitude2);
         });
