@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Route and Flora/Fauna between Mumbai and Lonavala</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 400px;
+        }
+        .observation {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        img {
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h1>Route and Flora/Fauna between Mumbai and Lonavala</h1>
+    <div id="map"></div>
+    <div id="observations"></div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var map = L.map('map').setView([18.975, 73.409], 10); // Center map between Mumbai and Lonavala
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            var mumbai = L.marker([19.0760, 72.8777]).addTo(map); // Add marker for Mumbai
+            var lonavala = L.marker([18.7507, 73.4057]).addTo(map); // Add marker for Lonavala
+
+            var latlngs = [
+                [19.0760, 72.8777], // Mumbai
+                [18.7507, 73.4057]  // Lonavala
+            ];
+
+            var polyline = L.polyline(latlngs, {color: 'blue'}).addTo(map); // Add polyline for the route
+
+            // Zoom the map to the polyline
+            map.fitBounds(polyline.getBounds());
+
+            // Fetch flora and fauna observations from iNaturalist API
+            var observationsContainer = document.getElementById("observations");
+            var observationsEndpoint = 'https://api.inaturalist.org/v1/observations';
+
+            function fetchObservations(latitude1, longitude1, latitude2, longitude2) {
+                fetch(`${observationsEndpoint}?nelat=${latitude1}&nelng=${longitude1}&swlat=${latitude2}&swlng=${longitude2}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        observationsContainer.innerHTML = '';
+
+                        data.results.forEach(observation => {
+                            var observationDiv = document.createElement("div");
+                            observationDiv.classList.add("observation");
+
+                            var speciesName = observation.taxon && observation.taxon.name ? observation.taxon.name : 'Unknown';
+                            var observerName = observation.user ? observation.user.login : 'Unknown';
+                            var location = observation.place_guess || 'Unknown';
+                            var observationDate = observation.observed_on || 'Unknown';
+
+                            var image = observation.photos && observation.photos.length > 0 ? observation.photos[0].url : '';
+
+                            observationDiv.innerHTML = `
+                                <h2>${speciesName}</h2>
+                                ${image ? `<img src="${image}" alt="${speciesName}">` : ''}
+                                <p>Observer: ${observerName}</p>
+                                <p>Location: ${location}</p>
+                                <p>Date: ${observationDate}</p>
+                            `;
+
+                            observationsContainer.appendChild(observationDiv);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error fetching data:', error);
+                    });
+            }
+
+            // Coordinates for bounding box around Mumbai and Lonavala
+            var latitude1 = 19.0760; // North latitude (Mumbai)
+            var longitude1 = 73.4057; // East longitude (Lonavala)
+            var latitude2 = 18.7507; // South latitude (Lonavala)
+            var longitude2 = 72.8777; // West longitude (Mumbai)
+
+            fetchObservations(latitude1, longitude1, latitude2, longitude2);
+        });
+    </script>
+</body>
+</html>
